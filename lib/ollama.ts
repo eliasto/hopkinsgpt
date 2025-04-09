@@ -1,4 +1,6 @@
-import { API_URL, MODEL_THINKING, SYSTEM_PROMPT, THINKING } from "./constants";
+import { MODEL_THINKING, SYSTEM_PROMPT, THINKING } from "./constants";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const generatePrompt = async (
   prompt: string,

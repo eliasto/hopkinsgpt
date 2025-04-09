@@ -8,3 +8,9 @@ Petit test d'utilisation d'ollama pour discuter avec mon chien !
 
 Suivre les instructions sur le site de [Ollama](https://ollama.com/) pour installer Ollama.
 Installez ensuite les différents modèles avec `ollama pull <model>`.
+
+Créez un fichier `.env` à la racine du projet contenant l'URL de l'API de votre instance Ollama :
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:11434/api/
+```
