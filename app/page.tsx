@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ChatBubble } from "@/components/chat-bubble";
-import { generatePrompt } from "@/lib/ollama";
+import { generateChat, Message } from "@/lib/ollama";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
@@ -12,16 +12,12 @@ import {
   CONNECTION_ERROR,
   LOADING_MODELS,
   NO_MODEL_AVAILABLE,
+  SYSTEM_PROMPT,
 } from "@/lib/constants";
 import { Dog, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -29,6 +25,9 @@ export default function Home() {
   const [model, setModel] = useState(LOADING_MODELS);
   const [isGenerating, setIsGenerating] = useState(false);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [messageHistory, setMessageHistory] = useState<Message[]>([
+    SYSTEM_PROMPT,
+  ]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,6 +63,7 @@ export default function Home() {
     if (!input.trim() || isGenerating) return;
 
     const userMessage: Message = { role: "user", content: input };
+    setMessageHistory((prev) => [...prev, userMessage]);
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsGenerating(true);
@@ -72,8 +72,8 @@ export default function Home() {
     setMessages((prev) => [...prev, assistantMsg]);
 
     try {
-      await generatePrompt(
-        input,
+      const result = await generateChat(
+        [...messageHistory, userMessage],
         model,
         (chunk) => {
           assistantMsg.content += chunk;
@@ -85,6 +85,10 @@ export default function Home() {
         },
         false
       );
+      setMessageHistory((prev) => [
+        ...prev,
+        { role: "assistant", content: result },
+      ]);
     } catch (err) {
       console.error("Error generating response:", err);
       assistantMsg.content = "❌ Erreur lors de la génération.";
@@ -175,11 +179,7 @@ export default function Home() {
                 transition={{ duration: 0.3 }}
                 className="mb-4"
               >
-                <ChatBubble
-                  role={msg.role}
-                  content={msg.content}
-                  isLoading={msg.content.length < 1}
-                />
+                <ChatBubble message={msg} isLoading={msg.content.length < 1} />
               </motion.div>
             ))}
           </AnimatePresence>

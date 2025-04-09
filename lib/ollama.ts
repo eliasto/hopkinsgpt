@@ -1,23 +1,21 @@
-import { MODEL_THINKING, SYSTEM_PROMPT, THINKING } from "./constants";
+import { MODEL_THINKING, THINKING } from "./constants";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const generatePrompt = async (
-  prompt: string,
+export const generateChat = async (
+  messages: Message[],
   model = "deepseek-r1",
   onData?: (chunk: string) => void,
   debug: boolean = false
 ): Promise<string> => {
-  const response = await fetch(API_URL + "generate", {
+  const response = await fetch(API_URL + "chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       model,
-      prompt,
-      stream: true,
-      system: SYSTEM_PROMPT,
+      messages: messages,
     }),
   });
 
@@ -42,12 +40,13 @@ export const generatePrompt = async (
     for (const line of lines) {
       try {
         const json = JSON.parse(line);
-        if (json.response) {
+        const response = json.message.content;
+        if (response) {
           if (debug || isThinkingDone || !MODEL_THINKING.includes(model)) {
-            result += json.response;
-            onData?.(json.response);
+            result += response;
+            onData?.(response);
           }
-          if (!isThinkingDone && THINKING.includes(json.response)) {
+          if (!isThinkingDone && THINKING.includes(response)) {
             isThinkingDone = true;
           }
         }
@@ -99,3 +98,8 @@ interface Model {
 interface ModelsResponse {
   models: Model[];
 }
+
+export type Message = {
+  role: "user" | "assistant" | "system";
+  content: string;
+};

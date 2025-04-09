@@ -1,13 +1,13 @@
+import { Message } from "@/lib/ollama";
 import { cn } from "@/lib/utils";
 
 type ChatBubbleProps = {
-  role: "user" | "assistant";
-  content: string;
+  message: Message;
   isLoading: boolean;
 };
 
-export function ChatBubble({ role, content, isLoading }: ChatBubbleProps) {
-  const isUser = role === "user";
+export function ChatBubble({ message, isLoading }: ChatBubbleProps) {
+  const isUser = message.role === "user";
 
   return (
     <div
@@ -21,7 +21,7 @@ export function ChatBubble({ role, content, isLoading }: ChatBubbleProps) {
             : "bg-gray-200 dark:bg-gray-300 text-black rounded-bl-none"
         )}
       >
-        {isLoading ? <LoaderDots /> : content}
+        {isLoading ? <LoaderDots /> : message.content}
       </div>
     </div>
   );
