@@ -114,7 +114,7 @@ export default function Home() {
   const apiError = model === CONNECTION_ERROR;
 
   return (
-    <div className="bg-background flex flex-col h-screen">
+    <div className="bg-background flex flex-col h-dvh">
       <header className="border-b bg-gradient-to-r from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm transition-colors duration-300">
         <div className="max-w-4xl mx-auto w-full">
           <div className="flex items-center justify-center p-4 gap-3">
