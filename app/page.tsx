@@ -2,9 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { ChatBubble } from "@/components/chat_bubble";
+import { ChatBubble } from "@/components/chat-bubble";
 import { generatePrompt } from "@/lib/ollama";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { ModelSelector } from "@/components/model-selector";
 
 type Message = {
   role: "user" | "assistant";
@@ -14,6 +16,7 @@ type Message = {
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [model, setModel] = useState("deepseek-r1");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export default function Home() {
     try {
       await generatePrompt(
         input,
-        "deepseek-r1",
+        model,
         (chunk) => {
           assistantMsg.content += chunk;
           setMessages((prev) => {
@@ -95,15 +98,19 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="min-h-[80px] pr-20 bg-white"
+              className="min-h-[120px] pr-20 bg-white"
             />
-            <Button
-              onClick={sendMessage}
-              disabled={!input.trim()}
-              className="absolute bottom-2 right-2 h-8 px-3 text-sm"
-            >
-              Envoyer
-            </Button>
+            <div className="absolute bottom-2 right-2 flex items-center space-x-2">
+              <ThemeToggle />
+              <ModelSelector model={model} setModel={setModel} />
+              <Button
+                onClick={sendMessage}
+                disabled={!input.trim()}
+                className="px-4 text-sm"
+              >
+                Envoyer
+              </Button>
+            </div>
           </div>
         </div>
       </div>

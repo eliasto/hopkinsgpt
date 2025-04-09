@@ -17,8 +17,8 @@ export function ChatBubble({ role, content, isLoading }: ChatBubbleProps) {
         className={cn(
           "max-w-[80%] px-4 py-2 rounded-2xl shadow",
           isUser
-            ? "bg-slate-700 text-white rounded-br-none"
-            : "bg-gray-200 text-black rounded-bl-none"
+            ? "bg-slate-700 dark:bg-gray-600 text-white rounded-br-none"
+            : "bg-gray-200 dark:bg-gray-300 text-black rounded-bl-none"
         )}
       >
         {isLoading ? <LoaderDots /> : content}

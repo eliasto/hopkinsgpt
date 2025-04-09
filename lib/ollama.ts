@@ -27,7 +27,9 @@ export const generatePrompt = async (
   const decoder = new TextDecoder("utf-8");
 
   let result = "";
-  let isThinkDone = false;
+  let isThinkingDone = false;
+  const thinking = ["</think>"];
+  const modelsNotThinking = ["mistral"];
 
   while (true) {
     const { done, value } = await reader.read();
@@ -40,13 +42,12 @@ export const generatePrompt = async (
       try {
         const json = JSON.parse(line);
         if (json.response) {
-          console.log("Réponse:", json.response, debug);
-          if (debug || isThinkDone) {
+          if (debug || isThinkingDone || modelsNotThinking.includes(model)) {
             result += json.response;
             onData?.(json.response);
           }
-          if (!isThinkDone && json.response === "</think>") {
-            isThinkDone = true;
+          if (!isThinkingDone && thinking.includes(json.response)) {
+            isThinkingDone = true;
           }
         }
       } catch (err) {
