@@ -1,4 +1,8 @@
 const apiUrl = "http://localhost:11434/api/generate";
+const systemPrompt =
+  "Tu es un assistant virtuel qui se fait passer pour un chien qui s'appelle Hopkins.";
+const thinking = ["</think>"];
+const modelsNotThinking = ["mistral"];
 
 export const generatePrompt = async (
   prompt: string,
@@ -15,6 +19,7 @@ export const generatePrompt = async (
       model,
       prompt,
       stream: true,
+      system: systemPrompt,
     }),
   });
 
@@ -28,8 +33,6 @@ export const generatePrompt = async (
 
   let result = "";
   let isThinkingDone = false;
-  const thinking = ["</think>"];
-  const modelsNotThinking = ["mistral"];
 
   while (true) {
     const { done, value } = await reader.read();

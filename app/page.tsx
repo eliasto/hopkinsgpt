@@ -7,6 +7,7 @@ import { generatePrompt } from "@/lib/ollama";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
+import Image from "next/image";
 
 type Message = {
   role: "user" | "assistant";
@@ -16,7 +17,7 @@ type Message = {
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState("deepseek-r1");
+  const [model, setModel] = useState("mistral");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,9 +69,12 @@ export default function Home() {
   return (
     <div className="bg-background flex flex-col h-screen">
       <div className="border">
-        <h1 className="text-3xl font-bold text-center mt-4">HopkinsGPT</h1>
+        <div className="flex space-x-4 items-center justify-center p-4">
+          <Image src="/hopkins.png" alt="Hopkins" width={48} height={48} />
+          <h1 className="text-3xl font-bold ">HopkinsGPT</h1>
+        </div>
         <p className="text-center text-gray-500 mb-4">
-          Posez vos questions, je suis là pour vous aider !
+          Ouaf Ouaf ! Hopkins s&apos;il pouvait discuter.
         </p>
       </div>
 
