@@ -4,13 +4,11 @@ import * as React from "react";
 
 import { useEffect } from "react";
 import { getModels } from "@/lib/ollama";
-import { NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { CONNECTION_ERROR, NO_MODEL_AVAILABLE } from "@/lib/constants";
 
 type ModelSelectorProps = {
   model: string;
   setModel: React.Dispatch<React.SetStateAction<string>>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   availableModels: string[];
   setAvailableModels: React.Dispatch<React.SetStateAction<string[]>>;
 };
@@ -18,26 +16,27 @@ type ModelSelectorProps = {
 export function Loading({
   model,
   setModel,
-  setIsLoading,
   setAvailableModels,
 }: ModelSelectorProps) {
   useEffect(() => {
     const loadModels = async () => {
-      setIsLoading(true);
-      const models = await getModels();
-      setAvailableModels(models);
+      try {
+        const models = await getModels();
+        setAvailableModels(models);
 
-      if (models.length === 0) {
-        setModel(NO_MODEL_AVAILABLE);
-      } else if (!models.includes(model)) {
-        setModel(models[0]);
+        if (models.length === 0) {
+          setModel(NO_MODEL_AVAILABLE);
+        } else if (!models.includes(model)) {
+          setModel(models[0]);
+        }
+      } catch (error) {
+        console.error("Error loading models:", error);
+        setModel(CONNECTION_ERROR);
       }
-
-      setIsLoading(false);
     };
 
     loadModels();
-  }, [model, setAvailableModels, setIsLoading, setModel]);
+  }, [model, setAvailableModels, setModel]);
 
   return (
     <div className="flex items-center justify-center h-full">

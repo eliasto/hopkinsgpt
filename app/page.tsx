@@ -8,7 +8,11 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
-import { LOADING_MODELS, NO_MODEL_AVAILABLE } from "@/lib/constants";
+import {
+  CONNECTION_ERROR,
+  LOADING_MODELS,
+  NO_MODEL_AVAILABLE,
+} from "@/lib/constants";
 import { Dog, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
@@ -103,6 +107,7 @@ export default function Home() {
 
   const noModel = model === NO_MODEL_AVAILABLE;
   const isLoading = model === LOADING_MODELS;
+  const apiError = model === CONNECTION_ERROR;
 
   return (
     <div className="bg-background flex flex-col h-screen">
@@ -138,11 +143,25 @@ export default function Home() {
             <Loading
               model={model}
               setModel={setModel}
-              setIsLoading={setIsGenerating}
-              isLoading={false}
               availableModels={availableModels}
               setAvailableModels={setAvailableModels}
             />
+          )}
+
+          {apiError && (
+            <div className=" p-4 text-center">
+              <p className="text-red-500 text-center">
+                Impossible de se connecter à <strong>ollama</strong>. Veuillez
+                réessayer.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-2 hover:cursor-pointer"
+                onClick={() => window.location.reload()}
+              >
+                Réessayer
+              </Button>
+            </div>
           )}
 
           {noModel && <NoModelAvailable preferredModel="mistral" />}
@@ -187,7 +206,7 @@ export default function Home() {
         </div>
       </main>
 
-      {!noModel && !isLoading && (
+      {!noModel && !isLoading && !apiError && (
         <footer className="border-t bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300">
           <div className="max-w-2xl mx-auto p-4">
             <div className="relative rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all">
