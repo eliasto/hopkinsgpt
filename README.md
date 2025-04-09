@@ -1,3 +1,5 @@
+![Illustration](.github/illustration.png)
+
 ## HopkinsGPT
 
 Petit test d'utilisation d'ollama pour discuter avec mon chien !
