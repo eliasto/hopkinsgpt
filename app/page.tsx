@@ -17,7 +17,7 @@ type Message = {
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState("mistral");
+  const [model, setModel] = useState("Chargement...");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

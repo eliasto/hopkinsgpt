@@ -1,3 +1,8 @@
 ## HopkinsGPT
 
-Petit test de Ollama avec deepseek-r1 (ou tout autre modèle) avec une interface à la ChatGPT, Le Chat, etc...
+Petit test d'utilisation d'ollama pour discuter avec mon chien !
+
+## Installation
+
+Suivre les instructions sur le site de [Ollama](https://ollama.com/) pour installer Ollama.
+Installez ensuite les différents modèles avec `ollama pull <model>`.
