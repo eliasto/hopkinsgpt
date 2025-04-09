@@ -12,37 +12,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEffect } from "react";
-import { getModels } from "@/lib/ollama";
+import { NO_MODEL_AVAILABLE } from "@/lib/constants";
 
 type ModelSelectorProps = {
   model: string;
   setModel: React.Dispatch<React.SetStateAction<string>>;
+  availableModels: string[];
 };
 
-export function ModelSelector({ model, setModel }: ModelSelectorProps) {
-  const [availableModels, setAvailableModels] = React.useState<string[]>([]);
-  const [isModelsLoading, setIsModelsLoading] = React.useState(false);
-  const [showNoModelsAlert, setShowNoModelsAlert] = React.useState(false);
-  useEffect(() => {
-    const loadModels = async () => {
-      setIsModelsLoading(true);
-      const models = await getModels();
-      setAvailableModels(models);
-
-      if (models.length === 0) {
-        setShowNoModelsAlert(true);
-      } else if (!models.includes(model)) {
-        // Si le modèle actuel n'est pas dans la liste, définir le premier comme défaut
-        setModel(models[0]);
-      }
-
-      setIsModelsLoading(false);
-    };
-
-    loadModels();
-  }, [model, setModel]);
-
+export function ModelSelector({
+  model,
+  setModel,
+  availableModels,
+}: ModelSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -52,14 +34,9 @@ export function ModelSelector({ model, setModel }: ModelSelectorProps) {
         <DropdownMenuLabel>Sélectionner votre modèle</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={model} onValueChange={setModel}>
-          {isModelsLoading && (
-            <DropdownMenuRadioItem disabled value="Chargement...">
-              Chargement...
-            </DropdownMenuRadioItem>
-          )}
-          {showNoModelsAlert && (
+          {availableModels.length < 1 && (
             <DropdownMenuRadioItem disabled value={""}>
-              Aucun modèle disponible
+              {NO_MODEL_AVAILABLE}
             </DropdownMenuRadioItem>
           )}
           {availableModels.map((modelName) => (

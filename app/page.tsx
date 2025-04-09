@@ -8,6 +8,11 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
+import { LOADING_MODELS, NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { Dog, Send } from "lucide-react";
+import { NoModelAvailable } from "@/components/no-model-available";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loading } from "@/components/loading";
 
 type Message = {
   role: "user" | "assistant";
@@ -17,19 +22,47 @@ type Message = {
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState("Chargement...");
+  const [model, setModel] = useState(LOADING_MODELS);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
+    // Scroll to bottom when messages change
+    if (containerRef.current) {
+      const { scrollHeight } = containerRef.current;
+      containerRef.current.scrollTo({
+        top: scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
 
+  // Welcome effect
+  useEffect(() => {
+    if (messages.length === 0) {
+      const timer = setTimeout(() => {
+        if (model !== NO_MODEL_AVAILABLE && model !== LOADING_MODELS) {
+          setMessages([
+            {
+              role: "assistant",
+              content:
+                "Woof ! Je suis Hopkins, votre assistant virtuel. Comment puis-je vous aider aujourd'hui ? 🐾",
+            },
+          ]);
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [model, messages.length]);
+
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isGenerating) return;
 
     const userMessage: Message = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    setIsGenerating(true);
 
     const assistantMsg: Message = { role: "assistant", content: "" };
     setMessages((prev) => [...prev, assistantMsg]);
@@ -48,14 +81,16 @@ export default function Home() {
         },
         false
       );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
+      console.error("Error generating response:", err);
       assistantMsg.content = "❌ Erreur lors de la génération.";
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = { ...assistantMsg };
         return updated;
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -66,58 +101,134 @@ export default function Home() {
     }
   };
 
+  const noModel = model === NO_MODEL_AVAILABLE;
+  const isLoading = model === LOADING_MODELS;
+
   return (
     <div className="bg-background flex flex-col h-screen">
-      <div className="border">
-        <div className="flex space-x-4 items-center justify-center p-4">
-          <Image src="/hopkins.png" alt="Hopkins" width={48} height={48} />
-          <h1 className="text-3xl font-bold ">HopkinsGPT</h1>
+      <header className="border-b bg-gradient-to-r from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm transition-colors duration-300">
+        <div className="max-w-4xl mx-auto w-full">
+          <div className="flex items-center justify-center p-4 gap-3">
+            <div className="relative group">
+              <div className="absolute transition duration-300 group-hover:duration-200"></div>
+              <div className="relative">
+                <Image
+                  src="/hopkins.png"
+                  alt="Hopkins"
+                  width={48}
+                  height={48}
+                  className="rounded-full transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold bg-clip-text">HopkinsGPT</h1>
+          </div>
+          <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
+            Ouaf Ouaf ! Hopkins s&apos;il pouvait discuter.
+          </p>
         </div>
-        <p className="text-center text-gray-500 mb-4">
-          Ouaf Ouaf ! Hopkins s&apos;il pouvait discuter.
-        </p>
-      </div>
+      </header>
 
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <div
           ref={containerRef}
-          className="h-full overflow-y-auto space-y-4 p-4 max-w-2xl mx-auto"
+          className="h-full overflow-y-auto p-4 md:p-6 max-w-2xl mx-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700"
         >
-          {messages.map((msg, i) => (
-            <ChatBubble
-              key={i}
-              role={msg.role}
-              content={msg.content}
-              isLoading={msg.content.length < 1}
+          {isLoading && (
+            <Loading
+              model={model}
+              setModel={setModel}
+              setIsLoading={setIsGenerating}
+              isLoading={false}
+              availableModels={availableModels}
+              setAvailableModels={setAvailableModels}
             />
-          ))}
-        </div>
-      </div>
+          )}
 
-      <div className="p-4 border-t">
-        <div className="max-w-2xl mx-auto">
-          <div className="relative">
-            <Textarea
-              placeholder="Tape ton message ici…"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="min-h-[120px] pr-20 bg-white"
-            />
-            <div className="absolute bottom-2 right-2 flex items-center space-x-2">
-              <ThemeToggle />
-              <ModelSelector model={model} setModel={setModel} />
-              <Button
-                onClick={sendMessage}
-                disabled={!input.trim()}
-                className="px-4 text-sm"
+          {noModel && <NoModelAvailable preferredModel="mistral" />}
+
+          <AnimatePresence initial={false}>
+            {messages.map((msg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mb-4"
               >
-                Envoyer
-              </Button>
+                <ChatBubble
+                  role={msg.role}
+                  content={msg.content}
+                  isLoading={msg.content.length < 1}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Add bottom space to ensure last message is fully visible */}
+          {messages.length > 0 && <div className="h-4"></div>}
+
+          {messages.length === 0 && !noModel && !isLoading && (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center p-6 rounded-lg max-w-md">
+                <div className="inline-flex p-3 mb-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+                  <Dog className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-gray-100">
+                  Prêt à discuter
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Posez une question ou discutez avec Hopkins, votre chien
+                  virtuel.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      {!noModel && !isLoading && (
+        <footer className="border-t bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300">
+          <div className="max-w-2xl mx-auto p-4">
+            <div className="relative rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all">
+              <Textarea
+                disabled={noModel || isGenerating}
+                placeholder="Tape ton message ici…"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="min-h-[100px] pr-24 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
+              />
+              <div className="absolute bottom-2 right-2 flex items-center space-x-2">
+                <ThemeToggle />
+                <ModelSelector
+                  model={model}
+                  setModel={setModel}
+                  availableModels={availableModels}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isGenerating}
+                  className="px-4 text-sm transition-all duration-300 bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 dark:text-white"
+                >
+                  {isGenerating ? (
+                    <div className="h-4 w-4 border-2 border-white dark:border-gray-200 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-1" />
+                      Envoyer
+                    </>
+                  )}
+                </Button>{" "}
+              </div>
+            </div>
+            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
+              Hopkins ne connaissant pas très bien la langue des humains,
+              certaines de ses réponses peuvent être inexactes.
             </div>
           </div>
-        </div>
-      </div>
+        </footer>
+      )}
     </div>
   );
 }
