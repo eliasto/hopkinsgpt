@@ -183,7 +183,7 @@ export default function Home() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="sm:min-h-[100px] min-h-[60px] pr-24 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
+                className="sm:min-h-[100px] min-h-[80px] pb-12 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
               />
               <div className="absolute bottom-2 right-2 flex items-center space-x-2">
                 <ModelSelector
