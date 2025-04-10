@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { BrainCircuit } from "lucide-react";
 
 type ModelSelectorProps = {
   model: string;
@@ -28,7 +29,13 @@ export function ModelSelector({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">{model}</Button>
+        <Button variant="outline">
+          <span className="hidden sm:inline">{model}</span>
+          <BrainCircuit
+            className="h-5 w-5 sm:hidden"
+            aria-label="Select model"
+          />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Sélectionner votre modèle</DropdownMenuLabel>

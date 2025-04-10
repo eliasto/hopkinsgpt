@@ -95,7 +95,7 @@ export default function Home() {
               </Button>
             </a>
           </div>
-          <div className="flex items-center justify-center p-4 gap-3">
+          <div className="p-1 flex items-center justify-center sm:p-4 gap-3">
             <div className="relative group">
               <div className="absolute transition duration-300 group-hover:duration-200"></div>
               <div className="relative">
@@ -104,14 +104,14 @@ export default function Home() {
                   alt={PET_NAME}
                   width={48}
                   height={48}
-                  className="rounded-full transition-transform duration-300 group-hover:scale-110"
+                  className="rounded-full transition-transform duration-300 sm:group-hover:scale-110 sm:scale-100 scale-75"
                 />
               </div>
             </div>
-            <h1 className="text-3xl font-bold bg-clip-text">{PET_NAME}GPT</h1>
+            <h1 className="text-xl font-bold bg-clip-text sm:text-3xl">{PET_NAME}GPT</h1>
           </div>
-          <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
-            Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
+          <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic hidden sm:block">
+           Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
           </p>
           {apiError && (
             <div className="pb-4 text-center">
@@ -181,7 +181,7 @@ export default function Home() {
 
       {!noModel && !isLoading && (
         <footer className="border-t bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300">
-          <div className="max-w-2xl mx-auto p-4">
+          <div className=" p-1 max-w-2xl mx-auto sm:p-4">
             <div className="relative rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all">
               <Textarea
                 disabled={noModel || isGenerating}
@@ -189,7 +189,7 @@ export default function Home() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="min-h-[100px] pr-24 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
+                className="sm:min-h-[100px] min-h-[80px] pb-12 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
               />
               <div className="absolute bottom-2 right-2 flex items-center space-x-2">
                 <ModelSelector
@@ -205,15 +205,16 @@ export default function Home() {
                   {isGenerating ? (
                     <div className="h-4 w-4 border-2 border-white dark:border-gray-200 border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-1" />
-                      Envoyer
-                    </>
+                    <Send className="h-4 w-4 sm:mr-1" />
                   )}
-                </Button>{" "}
+                  <span className="hidden sm:inline">Envoyer</span>
+                </Button>
               </div>
             </div>
-            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
+            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400 sm:hidden">
+              Certaines des réponses peuvent être inexactes.
+            </div>
+            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
               {PET_NAME} ne connaissant pas très bien la langue des humains,
               certaines de ses réponses peuvent être inexactes.
             </div>
