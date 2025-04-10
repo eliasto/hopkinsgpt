@@ -154,7 +154,7 @@ export default function Home() {
           {/* Add bottom space to ensure last message is fully visible */}
           {messages.length > 0 && <div className="h-4"></div>}
 
-          {messages.length === 1 && !noModel && !isLoading && (
+          {messages.length === 0 && !noModel && !isLoading && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center p-6 rounded-lg max-w-md">
                 <div className="inline-flex p-3 mb-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
