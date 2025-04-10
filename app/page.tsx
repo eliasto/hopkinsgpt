@@ -48,7 +48,7 @@ export default function Home() {
             {
               role: "assistant",
               content:
-                "Woof ! Je suis Hopkins, votre assistant virtuel. Comment puis-je vous aider aujourd'hui ? 🐾",
+                "Woof ! Je suis Hopkins, ton assistant virtuel. Comment puis-je t'aider aujourd'hui ? 🐾",
             },
           ]);
         }
