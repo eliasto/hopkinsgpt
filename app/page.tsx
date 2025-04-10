@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
 import {
-  CONNECTION_ERROR,
+  AI_ENDPOINTS_NAME,
   LOADING_MODELS,
   NO_MODEL_AVAILABLE,
   SYSTEM_PROMPT,
@@ -18,12 +18,14 @@ import { Dog, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
+import { aiEndpointsGenerateChat } from "@/lib/ai_endpoints";
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([SYSTEM_PROMPT]);
   const [model, setModel] = useState(LOADING_MODELS);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [apiError, setApiError] = useState(false);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -38,25 +40,6 @@ export default function Home() {
     }
   }, [messages]);
 
-  // Welcome effect
-  useEffect(() => {
-    if (messages.length === 1) {
-      const timer = setTimeout(() => {
-        if (model !== NO_MODEL_AVAILABLE && model !== LOADING_MODELS) {
-          setMessages([
-            ...messages,
-            {
-              role: "assistant",
-              content:
-                "Woof ! Je suis Hopkins, ton assistant virtuel. Comment puis-je t'aider aujourd'hui ? 🐾",
-            },
-          ]);
-        }
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [model, messages.length, messages]);
-
   const sendMessage = async () => {
     if (!input.trim() || isGenerating) return;
 
@@ -69,19 +52,30 @@ export default function Home() {
     setMessages((prev: Message[]) => [...prev, assistantMsg]);
 
     try {
-      await generateChat(
-        [...messages, userMessage],
-        model,
-        (chunk) => {
+      if (model === AI_ENDPOINTS_NAME) {
+        await aiEndpointsGenerateChat([...messages, userMessage], (chunk) => {
           assistantMsg.content += chunk;
           setMessages((prev: Message[]) => {
             const updated = [...prev];
             updated[updated.length - 1] = { ...assistantMsg };
             return updated;
           });
-        },
-        false
-      );
+        });
+      } else {
+        await generateChat(
+          [...messages, userMessage],
+          model,
+          (chunk) => {
+            assistantMsg.content += chunk;
+            setMessages((prev: Message[]) => {
+              const updated = [...prev];
+              updated[updated.length - 1] = { ...assistantMsg };
+              return updated;
+            });
+          },
+          false
+        );
+      }
     } catch (err) {
       console.error("Error generating response:", err);
       assistantMsg.content = "❌ Erreur lors de la génération.";
@@ -104,7 +98,6 @@ export default function Home() {
 
   const noModel = model === NO_MODEL_AVAILABLE;
   const isLoading = model === LOADING_MODELS;
-  const apiError = model === CONNECTION_ERROR;
 
   return (
     <div className="bg-background flex flex-col h-dvh">
@@ -128,6 +121,14 @@ export default function Home() {
           <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
             Ouaf Ouaf ! Hopkins s&apos;il pouvait discuter.
           </p>
+          {apiError && (
+            <div className="pb-4 text-center">
+              <p className="text-red-500 text-center">
+                Impossible de se connecter à <strong>ollama</strong>. Seulement
+                AI Endpoints est disponible.
+              </p>
+            </div>
+          )}
         </div>
       </header>
 
@@ -142,23 +143,8 @@ export default function Home() {
               setModel={setModel}
               availableModels={availableModels}
               setAvailableModels={setAvailableModels}
+              setApiError={setApiError}
             />
-          )}
-
-          {apiError && (
-            <div className=" p-4 text-center">
-              <p className="text-red-500 text-center">
-                Impossible de se connecter à <strong>ollama</strong>. Veuillez
-                réessayer.
-              </p>
-              <Button
-                variant="outline"
-                className="mt-2 hover:cursor-pointer"
-                onClick={() => window.location.reload()}
-              >
-                Réessayer
-              </Button>
-            </div>
           )}
 
           {noModel && <NoModelAvailable preferredModel="mistral" />}
@@ -199,7 +185,7 @@ export default function Home() {
         </div>
       </main>
 
-      {!noModel && !isLoading && !apiError && (
+      {!noModel && !isLoading && (
         <footer className="border-t bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm transition-all duration-300">
           <div className="max-w-2xl mx-auto p-4">
             <div className="relative rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all">

@@ -4,25 +4,27 @@ import * as React from "react";
 
 import { useEffect } from "react";
 import { getModels } from "@/lib/ollama";
-import { CONNECTION_ERROR, NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { AI_ENDPOINTS_NAME, NO_MODEL_AVAILABLE } from "@/lib/constants";
 
 type ModelSelectorProps = {
   model: string;
   setModel: React.Dispatch<React.SetStateAction<string>>;
   availableModels: string[];
   setAvailableModels: React.Dispatch<React.SetStateAction<string[]>>;
+  setApiError: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function Loading({
   model,
   setModel,
   setAvailableModels,
+  setApiError,
 }: ModelSelectorProps) {
   useEffect(() => {
     const loadModels = async () => {
       try {
         const models = await getModels();
-        setAvailableModels(models);
+        setAvailableModels([...models, AI_ENDPOINTS_NAME]);
 
         if (models.length === 0) {
           setModel(NO_MODEL_AVAILABLE);
@@ -31,12 +33,14 @@ export function Loading({
         }
       } catch (error) {
         console.error("Error loading models:", error);
-        setModel(CONNECTION_ERROR);
+        setModel(AI_ENDPOINTS_NAME);
+        setAvailableModels([AI_ENDPOINTS_NAME]);
+        setApiError(true);
       }
     };
 
     loadModels();
-  }, [model, setAvailableModels, setModel]);
+  }, [model, setApiError, setAvailableModels, setModel]);
 
   return (
     <div className="flex items-center justify-center h-full">

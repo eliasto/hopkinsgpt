@@ -2,7 +2,6 @@ import { Message } from "./ollama";
 
 export const NO_MODEL_AVAILABLE = "Aucun modèle disponible";
 export const LOADING_MODELS = "Chargement...";
-export const CONNECTION_ERROR = "Impossible de joindre l'API";
 export const SYSTEM_PROMPT: Message = {
   role: "system",
   content:
@@ -10,3 +9,4 @@ export const SYSTEM_PROMPT: Message = {
 };
 export const THINKING = ["</think>"];
 export const MODEL_THINKING = ["deepseek-r1:latest"];
+export const AI_ENDPOINTS_NAME = "AI Endpoints (OVHCloud)";
