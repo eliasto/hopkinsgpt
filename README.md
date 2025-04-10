@@ -13,7 +13,7 @@ Créez un fichier `.env` à la racine du projet contenant l'URL de l'API de votr
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:11434/api/
-NEXT_PUBLIC_AI_ENDPOINTS_TOKEN=your_token
+AI_ENDPOINTS_TOKEN=your_token
 ```
 
 Pour obtenir votre token de AI Endpoints, rendez-vous sur le site de [OVHcloud](https://endpoints.ai.cloud.ovh.net/).

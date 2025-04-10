@@ -4,25 +4,17 @@ export const aiEndpointsGenerateChat = async (
   messages: Message[],
   onData?: (chunk: string) => void
 ): Promise<string> => {
-  const API_KEY = process.env.NEXT_PUBLIC_AI_ENDPOINTS_TOKEN;
-  const modelEndpoint =
-    "https://llama-3-3-70b-instruct.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1/chat/completions";
-
-  const response = await fetch(modelEndpoint, {
+  const response = await fetch("/api/ai-endpoints", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`,
     },
-    body: JSON.stringify({
-      messages: messages,
-      stream: true,
-    }),
+    body: JSON.stringify({ messages }),
   });
 
   if (!response.ok || !response.body) {
     const errMsg = await response.text();
-    throw new Error(`Erreur réseau: ${response.status} - ${errMsg}`);
+    throw new Error(`Network error: ${response.status} - ${errMsg}`);
   }
 
   const reader = response.body.getReader();
@@ -54,7 +46,7 @@ export const aiEndpointsGenerateChat = async (
             onData?.(content);
           }
         } catch (err) {
-          console.warn("Erreur de parsing JSON:", line, err);
+          console.warn("JSON parsing error:", line, err);
         }
       }
     }
