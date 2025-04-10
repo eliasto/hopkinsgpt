@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { BrainCircuit, ChevronDown, PlusIcon } from "lucide-react";
 
 type ModelSelectorProps = {
   model: string;
@@ -30,20 +31,10 @@ export function ModelSelector({
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <span className="hidden sm:inline">{model}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
+          <BrainCircuit
             className="h-5 w-5 sm:hidden"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
+            aria-label="Select model"
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
