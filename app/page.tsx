@@ -12,6 +12,7 @@ import {
   AI_ENDPOINTS_NAME,
   LOADING_MODELS,
   NO_MODEL_AVAILABLE,
+  PET_NAME,
   SYSTEM_PROMPT,
 } from "@/lib/constants";
 import { Dog, Send } from "lucide-react";
@@ -109,17 +110,17 @@ export default function Home() {
               <div className="relative">
                 <Image
                   src="/hopkins.png"
-                  alt="Hopkins"
+                  alt={PET_NAME}
                   width={48}
                   height={48}
                   className="rounded-full transition-transform duration-300 group-hover:scale-110"
                 />
               </div>
             </div>
-            <h1 className="text-3xl font-bold bg-clip-text">HopkinsGPT</h1>
+            <h1 className="text-3xl font-bold bg-clip-text">{PET_NAME}GPT</h1>
           </div>
           <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
-            Ouaf Ouaf ! Hopkins s&apos;il pouvait discuter.
+            Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
           </p>
           {apiError && (
             <div className="pb-4 text-center">
@@ -178,7 +179,7 @@ export default function Home() {
                   Prêt à discuter
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Posez une question ou discutez avec Hopkins, votre chien
+                  Posez une question ou discutez avec {PET_NAME}, ton chien
                   virtuel.
                 </p>
               </div>
@@ -223,7 +224,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
-              Hopkins ne connaissant pas très bien la langue des humains,
+              {PET_NAME} ne connaissant pas très bien la langue des humains,
               certaines de ses réponses peuvent être inexactes.
             </div>
           </div>
