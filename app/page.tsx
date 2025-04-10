@@ -3,27 +3,20 @@
 import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ChatBubble } from "@/components/chat-bubble";
-import { generateChat, Message } from "@/lib/ollama";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
-import {
-  AI_ENDPOINTS_NAME,
-  LOADING_MODELS,
-  NO_MODEL_AVAILABLE,
-  PET_NAME,
-  SYSTEM_PROMPT,
-} from "@/lib/constants";
+import { LOADING_MODELS, NO_MODEL_AVAILABLE, PET_NAME } from "@/lib/constants";
 import { Dog, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
-import { aiEndpointsGenerateChat } from "@/lib/ai_endpoints";
+import { chat, Message } from "@/lib/api";
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([SYSTEM_PROMPT]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState(LOADING_MODELS);
   const [isGenerating, setIsGenerating] = useState(false);
   const [apiError, setApiError] = useState(false);
@@ -53,30 +46,19 @@ export default function Home() {
     setMessages((prev: Message[]) => [...prev, assistantMsg]);
 
     try {
-      if (model === AI_ENDPOINTS_NAME) {
-        await aiEndpointsGenerateChat([...messages, userMessage], (chunk) => {
+      await chat(
+        [...messages, userMessage],
+        model,
+        (chunk) => {
           assistantMsg.content += chunk;
           setMessages((prev: Message[]) => {
             const updated = [...prev];
             updated[updated.length - 1] = { ...assistantMsg };
             return updated;
           });
-        });
-      } else {
-        await generateChat(
-          [...messages, userMessage],
-          model,
-          (chunk) => {
-            assistantMsg.content += chunk;
-            setMessages((prev: Message[]) => {
-              const updated = [...prev];
-              updated[updated.length - 1] = { ...assistantMsg };
-              return updated;
-            });
-          },
-          false
-        );
-      }
+        },
+        false
+      );
     } catch (err) {
       console.error("Error generating response:", err);
       assistantMsg.content = "❌ Erreur lors de la génération.";

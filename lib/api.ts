@@ -1,21 +1,19 @@
 import { MODEL_THINKING, THINKING } from "./constants";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export const generateChat = async (
+export const chat = async (
   messages: Message[],
-  model = "deepseek-r1",
+  model: string,
   onData?: (chunk: string) => void,
   debug: boolean = false
 ): Promise<string> => {
-  const response = await fetch(API_URL + "chat", {
+  const response = await fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       model,
-      messages: messages,
+      messages,
     }),
   });
 
@@ -35,12 +33,14 @@ export const generateChat = async (
     if (done) break;
 
     const chunk = decoder.decode(value, { stream: true });
-
     const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+
     for (const line of lines) {
       try {
+        // All responses now follow the Ollama format
         const json = JSON.parse(line);
         const response = json.message.content;
+
         if (response) {
           if (debug || isThinkingDone || !MODEL_THINKING.includes(model)) {
             result += response;
@@ -60,44 +60,17 @@ export const generateChat = async (
 };
 
 export const getModels = async (): Promise<string[]> => {
-  const response = await fetch(API_URL + "tags", {
+  const response = await fetch("/api/models", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
     throw new Error(`Erreur réseau: ${response.status}`);
   }
 
-  const data: ModelsResponse = await response.json();
-  const models = data.models.map((model) => model.name);
-  console.log("Models:", models);
-  return models;
+  const data = await response.json();
+  return data.models;
 };
-
-interface ModelDetails {
-  parent_model: string;
-  format: string;
-  family: string;
-  families: string[];
-  parameter_size: string;
-  quantization_level: string;
-}
-
-interface Model {
-  name: string;
-  model: string;
-  modified_at: string;
-  size: number;
-  digest: string;
-  details: ModelDetails;
-}
-
-interface ModelsResponse {
-  models: Model[];
-}
 
 export type Message = {
   role: "user" | "assistant" | "system";

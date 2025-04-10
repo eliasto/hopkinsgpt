@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { useEffect } from "react";
-import { getModels } from "@/lib/ollama";
-import { AI_ENDPOINTS_NAME, NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { getModels } from "@/lib/api";
+import { NO_MODEL_AVAILABLE } from "@/lib/constants";
 
 type ModelSelectorProps = {
   model: string;
@@ -24,7 +24,7 @@ export function Loading({
     const loadModels = async () => {
       try {
         const models = await getModels();
-        setAvailableModels([...models, AI_ENDPOINTS_NAME]);
+        setAvailableModels(models);
 
         if (models.length === 0) {
           setModel(NO_MODEL_AVAILABLE);
@@ -33,8 +33,6 @@ export function Loading({
         }
       } catch (error) {
         console.error("Error loading models:", error);
-        setModel(AI_ENDPOINTS_NAME);
-        setAvailableModels([AI_ENDPOINTS_NAME]);
         setApiError(true);
       }
     };

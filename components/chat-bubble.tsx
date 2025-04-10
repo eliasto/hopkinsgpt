@@ -1,4 +1,3 @@
-import { Message } from "@/lib/ollama";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import { ComponentPropsWithoutRef, ReactNode, useState } from "react";
@@ -10,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Message } from "@/lib/api";
 
 type ChatBubbleProps = {
   message: Message;

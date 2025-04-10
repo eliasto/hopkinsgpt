@@ -12,7 +12,7 @@ Installez ensuite les différents modèles avec `ollama pull <model>`.
 Créez un fichier `.env` à la racine du projet contenant l'URL de l'API de votre instance Ollama :
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:11434/api/
+OLLAMA_API_URL=http://localhost:11434/api/
 AI_ENDPOINTS_TOKEN=your_token
 ```
 
