@@ -121,7 +121,7 @@ function CodeBlock({ inline, children, ...props }: CodeProps) {
   if (inline) {
     return (
       <code
-        className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-sm"
+        className="bg-gray-100 dark:bg-gray-700 dark:text-white px-1 py-0.5 rounded text-sm"
         {...props}
       >
         {children}
@@ -130,7 +130,7 @@ function CodeBlock({ inline, children, ...props }: CodeProps) {
   }
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-700 rounded p-2 my-2 overflow-x-auto relative group">
+    <div className="bg-gray-100 dark:bg-gray-700 dark:text-white rounded p-2 my-2 overflow-x-auto relative group">
       <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
         <TooltipProvider>
           <Tooltip>
@@ -142,7 +142,7 @@ function CodeBlock({ inline, children, ...props }: CodeProps) {
                 onClick={copyToClipboard}
               >
                 {isCopied ? (
-                  <Check className="h-2 w-2 text-green-500" />
+                  <Check className="h-2 w-2 text-green-500 dark:text-green-300" />
                 ) : (
                   <Clipboard className="h-2 w-2" />
                 )}
