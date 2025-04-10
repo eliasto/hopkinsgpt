@@ -8,6 +8,7 @@ type ChatBubbleProps = {
 
 export function ChatBubble({ message, isLoading }: ChatBubbleProps) {
   const isUser = message.role === "user";
+  if (message.role === "system") return;
 
   return (
     <div

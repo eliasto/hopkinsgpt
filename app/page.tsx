@@ -21,13 +21,10 @@ import { Loading } from "@/components/loading";
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([SYSTEM_PROMPT]);
   const [model, setModel] = useState(LOADING_MODELS);
   const [isGenerating, setIsGenerating] = useState(false);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
-  const [messageHistory, setMessageHistory] = useState<Message[]>([
-    SYSTEM_PROMPT,
-  ]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,10 +40,11 @@ export default function Home() {
 
   // Welcome effect
   useEffect(() => {
-    if (messages.length === 0) {
+    if (messages.length === 1) {
       const timer = setTimeout(() => {
         if (model !== NO_MODEL_AVAILABLE && model !== LOADING_MODELS) {
           setMessages([
+            ...messages,
             {
               role: "assistant",
               content:
@@ -57,27 +55,26 @@ export default function Home() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [model, messages.length]);
+  }, [model, messages.length, messages]);
 
   const sendMessage = async () => {
     if (!input.trim() || isGenerating) return;
 
     const userMessage: Message = { role: "user", content: input };
-    setMessageHistory((prev) => [...prev, userMessage]);
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev: Message[]) => [...prev, userMessage]);
     setInput("");
     setIsGenerating(true);
 
     const assistantMsg: Message = { role: "assistant", content: "" };
-    setMessages((prev) => [...prev, assistantMsg]);
+    setMessages((prev: Message[]) => [...prev, assistantMsg]);
 
     try {
-      const result = await generateChat(
-        [...messageHistory, userMessage],
+      await generateChat(
+        [...messages, userMessage],
         model,
         (chunk) => {
           assistantMsg.content += chunk;
-          setMessages((prev) => {
+          setMessages((prev: Message[]) => {
             const updated = [...prev];
             updated[updated.length - 1] = { ...assistantMsg };
             return updated;
@@ -85,14 +82,10 @@ export default function Home() {
         },
         false
       );
-      setMessageHistory((prev) => [
-        ...prev,
-        { role: "assistant", content: result },
-      ]);
     } catch (err) {
       console.error("Error generating response:", err);
       assistantMsg.content = "❌ Erreur lors de la génération.";
-      setMessages((prev) => {
+      setMessages((prev: Message[]) => {
         const updated = [...prev];
         updated[updated.length - 1] = { ...assistantMsg };
         return updated;
@@ -187,7 +180,7 @@ export default function Home() {
           {/* Add bottom space to ensure last message is fully visible */}
           {messages.length > 0 && <div className="h-4"></div>}
 
-          {messages.length === 0 && !noModel && !isLoading && (
+          {messages.length === 1 && !noModel && !isLoading && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center p-6 rounded-lg max-w-md">
                 <div className="inline-flex p-3 mb-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
