@@ -124,8 +124,10 @@ export default function Home() {
           {apiError && (
             <div className="pb-4 text-center">
               <p className="text-red-500 text-center">
-                Impossible de se connecter à <strong>ollama</strong>. Seulement
-                AI Endpoints est disponible.
+                Impossible de se connecter à <strong>ollama</strong>.
+              </p>
+              <p className="text-gray-500 dark:text-gray-400 text-center">
+                Llama 3.7 utilisant AI Endpoints (OVHcloud) est disponible.
               </p>
             </div>
           )}

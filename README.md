@@ -16,4 +16,4 @@ NEXT_PUBLIC_API_URL=http://localhost:11434/api/
 NEXT_PUBLIC_AI_ENDPOINTS_TOKEN=your_token
 ```
 
-Pour obtenir votre token de AI Endpoints, rendez-vous sur le site de [OVHCloud](https://endpoints.ai.cloud.ovh.net/).
+Pour obtenir votre token de AI Endpoints, rendez-vous sur le site de [OVHcloud](https://endpoints.ai.cloud.ovh.net/).

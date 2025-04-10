@@ -9,4 +9,4 @@ export const SYSTEM_PROMPT: Message = {
 };
 export const THINKING = ["</think>"];
 export const MODEL_THINKING = ["deepseek-r1:latest"];
-export const AI_ENDPOINTS_NAME = "AI Endpoints (OVHCloud)";
+export const AI_ENDPOINTS_NAME = "AI Endpoints";
