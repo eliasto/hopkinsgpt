@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NO_MODEL_AVAILABLE } from "@/lib/constants";
-import { BrainCircuit, ChevronDown, PlusIcon } from "lucide-react";
+import { BrainCircuit } from "lucide-react";
 
 type ModelSelectorProps = {
   model: string;
