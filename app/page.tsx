@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
 import { LOADING_MODELS, NO_MODEL_AVAILABLE, PET_NAME } from "@/lib/constants";
-import { Dog, Send } from "lucide-react";
+import { Cat, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
@@ -94,7 +94,7 @@ export default function Home() {
               <div className="absolute transition duration-300 group-hover:duration-200"></div>
               <div className="relative">
                 <Image
-                  src="/hopkins.png"
+                  src="/maily.png"
                   alt={PET_NAME}
                   width={48}
                   height={48}
@@ -105,7 +105,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold bg-clip-text">{PET_NAME}GPT</h1>
           </div>
           <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
-            Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
+            Miaou ! {PET_NAME} si elle pouvait discuter.
           </p>
           {apiError && (
             <div className="pb-4 text-center">
@@ -158,13 +158,13 @@ export default function Home() {
             <div className="flex items-center justify-center h-full">
               <div className="text-center p-6 rounded-lg max-w-md">
                 <div className="inline-flex p-3 mb-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-                  <Dog className="h-6 w-6" />
+                  <Cat className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-gray-100">
-                  Prêt à discuter
+                  Prête à discuter
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Posez une question ou discutez avec {PET_NAME}, ton chien
+                  Posez une question ou discutez avec {PET_NAME}, ton chat
                   virtuel.
                 </p>
               </div>
