@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
 import { LOADING_MODELS, NO_MODEL_AVAILABLE, PET_NAME } from "@/lib/constants";
-import { Dog, Send } from "lucide-react";
+import { Dog, LucideGithub, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
@@ -86,8 +86,14 @@ export default function Home() {
     <div className="bg-background flex flex-col h-dvh">
       <header className="border-b bg-gradient-to-r from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm transition-colors duration-300">
         <div className="max-w-4xl mx-auto w-full">
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 space-y-2 grid">
             <ThemeToggle />
+            <a href="https://github.com/eliasto/hopkinsgpt" target="_blank">
+              <Button variant="outline" size="icon" className="cursor-pointer">
+                <LucideGithub className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+                <span className="sr-only">Go to the Github project</span>
+              </Button>
+            </a>
           </div>
           <div className="flex items-center justify-center p-4 gap-3">
             <div className="relative group">
