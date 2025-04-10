@@ -86,7 +86,7 @@ export default function Home() {
     <div className="bg-background flex flex-col h-dvh">
       <header className="border-b bg-gradient-to-r from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-sm transition-colors duration-300">
         <div className="max-w-4xl mx-auto w-full">
-          <div className="absolute top-4 right-4 space-y-2 grid">
+          <div className="absolute top-4 right-4 space-x-2">
             <ThemeToggle />
             <a href="https://github.com/eliasto/hopkinsgpt" target="_blank">
               <Button variant="outline" size="icon" className="cursor-pointer">
@@ -108,10 +108,12 @@ export default function Home() {
                 />
               </div>
             </div>
-            <h1 className="text-xl font-bold bg-clip-text sm:text-3xl">{PET_NAME}GPT</h1>
+            <h1 className="text-xl font-bold bg-clip-text sm:text-3xl">
+              {PET_NAME}GPT
+            </h1>
           </div>
-          <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic hidden sm:block">
-           Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
+          <p className="text-center text-gray-500 dark:text-gray-400 mb-4 italic">
+            Ouaf Ouaf ! {PET_NAME} s&apos;il pouvait discuter.
           </p>
           {apiError && (
             <div className="pb-4 text-center">
@@ -211,10 +213,10 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400 sm:hidden">
+            <div className="text-center text-xs text-gray-500 dark:text-gray-400 sm:hidden p-2">
               Certaines des réponses peuvent être inexactes.
             </div>
-            <div className="mt-2 text-center text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+            <div className="text-center text-xs text-gray-500 dark:text-gray-400 hidden sm:block pt-2">
               {PET_NAME} ne connaissant pas très bien la langue des humains,
               certaines de ses réponses peuvent être inexactes.
             </div>
