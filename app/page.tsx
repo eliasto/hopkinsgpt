@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
 import { LOADING_MODELS, PET_NAME } from "@/lib/constants";
-import { Dog, LucideGithub, Send } from "lucide-react";
+import { LucideGithub, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
@@ -97,19 +97,7 @@ export default function Home() {
             </a>
           </div>
           <div className="p-1 flex items-center justify-center sm:p-4 gap-3">
-            <div className="relative group">
-              <div className="absolute transition duration-300 group-hover:duration-200"></div>
-              <div className="relative">
-                <Image
-                  src="/hopkins.png"
-                  alt={PET_NAME}
-                  width={48}
-                  height={48}
-                  className="rounded-full transition-transform duration-300 sm:group-hover:scale-110 sm:scale-100 scale-75"
-                />
-              </div>
-            </div>
-            <h1 className="text-xl font-bold bg-clip-text sm:text-3xl">
+            <h1 className="text-xl font-bold bg-clip-text sm:text-3xl mt-2">
               {PET_NAME}GPT
             </h1>
           </div>
@@ -166,9 +154,13 @@ export default function Home() {
           {messages.length === 0 && !noModel && !isLoading && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center p-6 rounded-lg max-w-md">
-                <div className="inline-flex p-3 mb-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-                  <Dog className="h-6 w-6" />
-                </div>
+                <Image
+                  className="inline-flex p-3 mb-4"
+                  src="/hopkins_round.png"
+                  alt={PET_NAME}
+                  width={96}
+                  height={96}
+                />
                 <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-gray-100">
                   Prêt à discuter
                 </h3>
