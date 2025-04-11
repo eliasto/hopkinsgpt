@@ -9,17 +9,6 @@ export async function POST(req: NextRequest) {
       await req.json();
     const messagesWithSystemPrompt = [SYSTEM_PROMPT, ...messages];
 
-    if (
-      !messagesWithSystemPrompt ||
-      !Array.isArray(messagesWithSystemPrompt) ||
-      !model
-    ) {
-      return NextResponse.json(
-        { error: "Invalid request body" },
-        { status: 400 }
-      );
-    }
-
     let originalResponse;
 
     if (model.source === ModelSource.AI_ENDPOINTS) {
