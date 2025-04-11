@@ -2,7 +2,7 @@
 
 ## HopkinsGPT
 
-Petit test d'utilisation d'ollama pour discuter avec mon chien ! Vous pouvez voir (ce projet)[https://hopkins.elias.my] en ligne, mais il n'utilise que AI Endpoints (je n'ai pas de serveur assez puissant pour faire tourner des modèles 😅). Néanmoins, vous pouvez cloner ce repo, et lancer Ollama avec `ollama serve` puis le projet avec `npm run build && npm run start` pour avoir vos modèles en local !
+Petit test d'utilisation d'ollama pour discuter avec mon chien ! Vous pouvez voir [ce projet](https://hopkins.elias.my) en ligne, mais il n'utilise que AI Endpoints (je n'ai pas de serveur assez puissant pour faire tourner des modèles 😅). Néanmoins, vous pouvez cloner ce repo, et lancer Ollama avec `ollama serve` puis le projet avec `npm run build && npm run start` pour avoir vos modèles en local !
 
 ## Installation
 
