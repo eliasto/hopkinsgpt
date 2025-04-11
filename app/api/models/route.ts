@@ -1,4 +1,3 @@
-import { AI_ENDPOINTS } from "@/lib/constants";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -14,15 +13,11 @@ export async function GET() {
 
     const data = await response.json();
 
-    const ollamaModelsName = data.models.map(
-      (model: { name: string }) => model.name
-    );
-
-    const models = [AI_ENDPOINTS, ...ollamaModelsName];
+    const models = data.models.map((model: { name: string }) => model.name);
 
     return NextResponse.json({ models });
   } catch (error) {
     console.error("Error fetching models:", error);
-    return NextResponse.json({ models: [AI_ENDPOINTS] });
+    return NextResponse.json({ models: [] });
   }
 }

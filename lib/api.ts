@@ -1,8 +1,9 @@
 import { MODEL_THINKING, THINKING } from "./constants";
+import { Message, Model, ModelSource } from "./interfaces";
 
 export const chat = async (
   messages: Message[],
-  model: string,
+  model: Model,
   onData?: (chunk: string) => void,
   debug: boolean = false
 ): Promise<string> => {
@@ -42,7 +43,7 @@ export const chat = async (
         const response = json.message.content;
 
         if (response) {
-          if (debug || isThinkingDone || !MODEL_THINKING.includes(model)) {
+          if (debug || isThinkingDone || !MODEL_THINKING.includes(model.name)) {
             result += response;
             onData?.(response);
           }
@@ -59,7 +60,7 @@ export const chat = async (
   return result;
 };
 
-export const getModels = async (): Promise<string[]> => {
+export const getModels = async (): Promise<Model[]> => {
   const response = await fetch("/api/models", {
     method: "GET",
   });
@@ -69,10 +70,8 @@ export const getModels = async (): Promise<string[]> => {
   }
 
   const data = await response.json();
-  return data.models;
-};
-
-export type Message = {
-  role: "user" | "assistant" | "system";
-  content: string;
+  const models = data.models.map(
+    (m: string) => new Model(m, ModelSource.OLLAMA)
+  );
+  return models;
 };

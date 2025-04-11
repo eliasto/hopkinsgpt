@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import Image from "next/image";
-import { LOADING_MODELS, NO_MODEL_AVAILABLE, PET_NAME } from "@/lib/constants";
+import { LOADING_MODELS, PET_NAME } from "@/lib/constants";
 import { Dog, LucideGithub, Send } from "lucide-react";
 import { NoModelAvailable } from "@/components/no-model-available";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loading } from "@/components/loading";
-import { chat, Message } from "@/lib/api";
+import { chat } from "@/lib/api";
+import { Message, Model } from "@/lib/interfaces";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -20,7 +21,7 @@ export default function Home() {
   const [model, setModel] = useState(LOADING_MODELS);
   const [isGenerating, setIsGenerating] = useState(false);
   const [apiError, setApiError] = useState(false);
-  const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [availableModels, setAvailableModels] = useState<Model[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function Home() {
     }
   };
 
-  const noModel = model === NO_MODEL_AVAILABLE;
+  const noModel = false;
   const isLoading = model === LOADING_MODELS;
 
   return (
@@ -191,7 +192,7 @@ export default function Home() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="sm:min-h-[100px] min-h-[80px] pb-12 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
+                className="sm:min-h-[100px] min-h-[80px] max-h-[200px] pb-12 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none shadow-none"
               />
               <div className="absolute bottom-2 right-2 flex items-center space-x-2">
                 <ModelSelector

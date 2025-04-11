@@ -1,9 +1,12 @@
-import { AI_ENDPOINTS, SYSTEM_PROMPT } from "@/lib/constants";
+import { Message } from "@/lib/interfaces";
+import { SYSTEM_PROMPT } from "@/lib/constants";
+import { Model, ModelSource } from "@/lib/interfaces";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, model } = await req.json();
+    const { messages, model }: { messages: Message[]; model: Model } =
+      await req.json();
     const messagesWithSystemPrompt = [SYSTEM_PROMPT, ...messages];
 
     if (
@@ -19,10 +22,10 @@ export async function POST(req: NextRequest) {
 
     let originalResponse;
 
-    if (model === AI_ENDPOINTS) {
+    if (model.source === ModelSource.AI_ENDPOINTS) {
       const API_KEY = process.env.AI_ENDPOINTS_TOKEN;
       const modelEndpoint =
-        "https://llama-3-3-70b-instruct.endpoints.kepler.ai.cloud.ovh.net/api/openai_compat/v1/chat/completions";
+        "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions";
 
       originalResponse = await fetch(modelEndpoint, {
         method: "POST",
@@ -33,6 +36,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           messages: messagesWithSystemPrompt,
           stream: true,
+          model: model.name,
         }),
       });
     } else {
@@ -44,7 +48,7 @@ export async function POST(req: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model,
+          model: model.name,
           messages: messagesWithSystemPrompt,
         }),
       });
@@ -63,7 +67,7 @@ export async function POST(req: NextRequest) {
         const decoder = new TextDecoder();
         const text = decoder.decode(chunk, { stream: true });
 
-        if (model === AI_ENDPOINTS) {
+        if (model.source === ModelSource.AI_ENDPOINTS) {
           const lines = text.split("\n").filter((line) => line.trim() !== "");
 
           for (const line of lines) {

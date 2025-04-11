@@ -4,13 +4,14 @@ import * as React from "react";
 
 import { useEffect } from "react";
 import { getModels } from "@/lib/api";
-import { NO_MODEL_AVAILABLE } from "@/lib/constants";
+import { AI_ENDPOINTS_MODELS } from "@/lib/constants";
+import { Model } from "@/lib/interfaces";
 
 type ModelSelectorProps = {
-  model: string;
-  setModel: React.Dispatch<React.SetStateAction<string>>;
-  availableModels: string[];
-  setAvailableModels: React.Dispatch<React.SetStateAction<string[]>>;
+  model: Model;
+  setModel: React.Dispatch<React.SetStateAction<Model>>;
+  availableModels: Model[];
+  setAvailableModels: React.Dispatch<React.SetStateAction<Model[]>>;
   setApiError: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -27,7 +28,7 @@ export function Loading({
         setAvailableModels(models);
 
         if (models.length === 0) {
-          setModel(NO_MODEL_AVAILABLE);
+          setModel(AI_ENDPOINTS_MODELS[0]);
         } else if (!models.includes(model)) {
           setModel(models[0]);
         }
